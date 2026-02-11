@@ -1,7 +1,7 @@
 const { createApp } = Vue;
 
 // 🔥 CHANGE THIS TO YOUR RENDER BACKEND URL
-const API_BASE = "https://your-render-backend.onrender.com";
+const API_BASE = "https://web-scraping-umzq.onrender.com";
 // For local testing, use:
 // const API_BASE = "http://localhost:5000";
 
