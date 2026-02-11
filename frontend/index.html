@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Commodities Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <div class="top-section">
+    <header>
+        <h1>Elements Dashboard</h1>
+    </header>
+
+    <div class="category-toggle">
+        <button 
+            v-for="cat in categories"
+            :key="cat"
+            :class="{ active: selectedCategory === cat }"
+            @click="selectCategory(cat)">
+            {{ cat }}
+        </button>
+    </div>
+
+    <div class="search-container">
+        <input 
+            type="text" 
+            placeholder="Search element..."
+            v-model="searchQuery">
+    </div>
+    </div>
+
+    <div class="cards-container">
+        <div 
+            class="card"
+            v-for="item in filteredCommodities"
+            :key="item.commodity">
+
+            <div class="card-header">
+                <h2>{{ item.commodity }}</h2>
+                <span class="unit">{{ item.unit }}</span>
+            </div>
+
+            <div class="price-section">
+                <div class="price">{{ item.price }}</div>
+                <div 
+                    class="change"
+                    :class="{
+                        positive: parseFloat(item.pct) > 0,
+                        negative: parseFloat(item.pct) < 0
+                    }">
+                    {{ item.pct }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

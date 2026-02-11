@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+commodities_clean.csv
+commodities_rendered.html
+scrapped_table.html
+table_rows.txt
