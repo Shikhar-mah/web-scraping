@@ -7,7 +7,8 @@ import time
 import subprocess
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://web-scraping-ecru.vercel.app/"}})
+
 
 data_file = "commodities_clean.csv"
 scrapper_file = "scrapper.py"
@@ -32,8 +33,8 @@ def auto_refresh():
 
 
 # Start background thread
-refresh_thread = threading.Thread(target=auto_refresh, daemon=True)
-refresh_thread.start()
+# refresh_thread = threading.Thread(target=auto_refresh, daemon=True)
+# refresh_thread.start()
 
 
 # -------------------------------------
@@ -131,4 +132,6 @@ def get_single(name):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    refresh_thread = threading.Thread(target=auto_refresh, daemon=True)
+    refresh_thread.start()
+    app.run(host="0.0.0.0", port=5000)

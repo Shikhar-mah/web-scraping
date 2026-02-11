@@ -1,12 +1,18 @@
 const { createApp } = Vue;
 
+// 🔥 CHANGE THIS TO YOUR RENDER BACKEND URL
+const API_BASE = "https://your-render-backend.onrender.com";
+// For local testing, use:
+// const API_BASE = "http://localhost:5000";
+
 createApp({
     data() {
         return {
             categories: [],
             selectedCategory: null,
             commodities: [],
-            searchQuery: ""
+            searchQuery: "",
+            refreshInterval: null
         };
     },
 
@@ -23,42 +29,55 @@ createApp({
     methods: {
 
         async fetchCategories() {
-            const res = await fetch("http://localhost:5000/categories");
-            this.categories = await res.json();
+            try {
+                const res = await fetch(`${API_BASE}/categories`);
+                const data = await res.json();
 
-            if (!this.selectedCategory && this.categories.length > 0) {
-                this.selectedCategory = this.categories[0];
-                this.fetchCommodities();
+                this.categories = data;
+
+                if (!this.selectedCategory && this.categories.length > 0) {
+                    this.selectedCategory = this.categories[0];
+                    await this.fetchCommodities();
+                }
+            } catch (error) {
+                console.error("Error fetching categories:", error);
             }
         },
 
         async fetchCommodities() {
             if (!this.selectedCategory) return;
 
-            const res = await fetch(
-                `http://localhost:5000/commodities?category=${this.selectedCategory}&limit=100`
-            );
-
-            const data = await res.json();
-            const newData = data.data;
-
-            // If first load → assign normally
-            if (this.commodities.length === 0) {
-                this.commodities = newData;
-                return;
-            }
-
-            // Otherwise update ONLY price & pct
-            newData.forEach(newItem => {
-                const existing = this.commodities.find(
-                    item => item.commodity === newItem.commodity
+            try {
+                const res = await fetch(
+                    `${API_BASE}/commodities?category=${this.selectedCategory}&limit=100`
                 );
 
-                if (existing) {
-                    existing.price = newItem.price;
-                    existing.pct = newItem.pct;
+                const data = await res.json();
+                const newData = data.data;
+
+                if (!newData) return;
+
+                // First load
+                if (this.commodities.length === 0) {
+                    this.commodities = newData;
+                    return;
                 }
-            });
+
+                // Update only price and pct
+                newData.forEach(newItem => {
+                    const existing = this.commodities.find(
+                        item => item.commodity === newItem.commodity
+                    );
+
+                    if (existing) {
+                        existing.price = newItem.price;
+                        existing.pct = newItem.pct;
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error fetching commodities:", error);
+            }
         },
 
         selectCategory(cat) {
@@ -68,13 +87,20 @@ createApp({
     },
 
     mounted() {
-        // Load categories once
         this.fetchCategories();
 
-        // 🔥 Refresh ONLY card data every 30 seconds
-        setInterval(() => {
-            this.fetchCommodities();
-        }, 30000);
+        // Prevent multiple intervals
+        if (!this.refreshInterval) {
+            this.refreshInterval = setInterval(() => {
+                this.fetchCommodities();
+            }, 30000);
+        }
+    },
+
+    beforeUnmount() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+        }
     }
 
 }).mount("#app");
