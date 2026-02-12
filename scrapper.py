@@ -29,11 +29,11 @@ selected_commodities = {
     'Rhodium': 'Metal',  # Replaced Iron Ore with Rhodium
     
     # Non-Metals
-    'Brent': 'Non-Metal',
-    'Natural gas': 'Non-Metal',  # Note: lowercase 'g' in 'gas' from your CSV
-    'Soybeans': 'Non-Metal',
-    'Wheat': 'Non-Metal',
-    'Cocoa': 'Non-Metal'
+    'Brent': 'Others',
+    'Natural gas': 'Others',  # Note: lowercase 'g' in 'gas' from your CSV
+    'Soybeans': 'Others',
+    'Wheat': 'Others',
+    'Cocoa': 'Others'
 }
 
 clean_rows = []
