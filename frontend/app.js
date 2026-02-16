@@ -23,7 +23,10 @@ createApp({
     methods: {
 
         async fetchCategories() {
-            const res = await fetch("http://localhost:5000/categories");
+
+            api_url = "http://localhost:5000"
+
+            const res = await fetch(api_url + "/categories");
             this.categories = await res.json();
 
             if (!this.selectedCategory && this.categories.length > 0) {
@@ -36,7 +39,7 @@ createApp({
             if (!this.selectedCategory) return;
 
             const res = await fetch(
-                `http://localhost:5000/commodities?category=${encodeURIComponent(this.selectedCategory)}&limit=100`
+                `${api_url}/commodities?category=${encodeURIComponent(this.selectedCategory)}&limit=100`
             );
 
             const data = await res.json();
