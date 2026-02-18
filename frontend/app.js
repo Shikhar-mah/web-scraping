@@ -24,7 +24,7 @@ createApp({
 
         async fetchCategories() {
 
-            api_url = "http://localhost:5000"
+            api_url = "https://web-scraping-backend-i93i.onrender.com"
 
             const res = await fetch(api_url + "/categories");
             this.categories = await res.json();
